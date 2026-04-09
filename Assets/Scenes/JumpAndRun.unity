@@ -2390,11 +2390,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87a6c60038c5247a7839a8aac06753a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Character
-  jumpCooldown: 0.1
-  gravity: -11
-  characterSpeed: 2
-  jumpSpeed: 5
-  dampening: 0.4
+  jumpCooldown: 0.2
+  gravity: -3
+  characterSpeed: 0.3
+  jumpSpeed: 1.2
+  dampening: 0.1
   cameraTransform: {fileID: 874627668}
 --- !u!143 &1156161271
 CharacterController:
@@ -2418,7 +2418,7 @@ CharacterController:
   m_Radius: 0.6
   m_SlopeLimit: 45
   m_StepOffset: 0.3
-  m_SkinWidth: 0.08
+  m_SkinWidth: 0.01
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1.15, z: 0}
 --- !u!1001 &1186388254
