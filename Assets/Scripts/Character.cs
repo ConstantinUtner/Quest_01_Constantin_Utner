@@ -12,7 +12,6 @@ public class Character : MonoBehaviour
     [SerializeField]
     private float jumpCooldown;
 
-    // We set gravity lower than in real live as it is more fun!
     [SerializeField]
     private float gravity;
 
@@ -48,7 +47,7 @@ public class Character : MonoBehaviour
             this.isJumping = false;
         }
 
-        if (this.controller.isGrounded && !this.isJumping && this.jumpAction.WasPressedThisFrame())
+        if (!this.isJumping && this.jumpAction.WasPressedThisFrame())
         {
             this.characterGravity = Vector3.zero;
             this.jumpVelocity = Vector3.zero;
@@ -59,17 +58,17 @@ public class Character : MonoBehaviour
 
         if (this.jumpVelocity.y > 0.0f)
         {
-            this.jumpVelocity.y -= Time.fixedDeltaTime;
+            this.jumpVelocity.y -= Time.deltaTime;
         }
         else
         {
             this.jumpVelocity = Vector3.zero;
         }
 
-        this.jumpCooldownTimer -= Time.fixedDeltaTime;
+        this.jumpCooldownTimer -= Time.deltaTime;
     }
 
-    void FixedUpdate()
+    void Update()
     {
         this.HandleJumping();
 
@@ -82,29 +81,24 @@ public class Character : MonoBehaviour
         inputRightDirection.Normalize();
         inputForwardDirection.Normalize();
 
-        // Since we do not use the physics system, we have to simulate gravity ourselves
-        if (!this.controller.isGrounded)
-        {
-            this.characterGravity.y += this.gravity * Time.fixedDeltaTime;
-        }
-        else
+        if (this.controller.isGrounded)
         {
             this.characterGravity.y = 0.0f;
         }
 
-        this.characterMovement += this.characterGravity * Time.fixedDeltaTime;
-        this.characterMovement += this.jumpVelocity * Time.fixedDeltaTime;
-
+        this.characterGravity.y += this.gravity * Time.deltaTime;
+        this.characterMovement += this.characterGravity * Time.deltaTime;
+        this.characterMovement += this.jumpVelocity * Time.deltaTime;
         this.characterMovement +=
-            inputRightDirection * inputMovement.x * this.characterSpeed * Time.fixedDeltaTime;
+            inputRightDirection * inputMovement.x * this.characterSpeed * Time.deltaTime;
         this.characterMovement +=
-            inputForwardDirection * inputMovement.y * this.characterSpeed * Time.fixedDeltaTime;
-
-        this.characterMovement *= (1.0f - this.dampening);
+            inputForwardDirection * inputMovement.y * this.characterSpeed * Time.deltaTime;
+        this.characterMovement *= (1 - this.dampening);
 
         Vector3 characterForward = this.characterMovement;
         characterForward.y = 0.0f;
-        if (characterForward.sqrMagnitude > 0.0f && characterForward != Vector3.zero)
+
+        if (characterForward.sqrMagnitude > 0.0f)
         {
             this.transform.forward = characterForward.normalized;
         }
