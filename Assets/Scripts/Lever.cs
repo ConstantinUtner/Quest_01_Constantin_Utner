@@ -8,6 +8,8 @@ public class Lever : MonoBehaviour
     private bool interpolating = false;
     private float currentInterpolationTime = 0.0f;
     private InputAction interactAction;
+    private bool isPlayerInRange = false;
+    private bool wasInteractPressed = false;
 
     [SerializeField]
     private float switchTime;
@@ -28,9 +30,38 @@ public class Lever : MonoBehaviour
 
     void Update()
     {
-        if (this.interactAction.WasPressedThisFrame() && !this.interpolating)
+        if (this.interactAction.WasPressedThisFrame())
         {
-            this.ToggleLever();
+            this.wasInteractPressed = true;
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (this.wasInteractPressed)
+        {
+            if (this.isPlayerInRange && !this.interpolating)
+            {
+                this.ToggleLever();
+            }
+            
+            this.wasInteractPressed = false;
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Character"))
+        {
+            this.isPlayerInRange = true;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Character"))
+        {
+            this.isPlayerInRange = false;
         }
     }
 
