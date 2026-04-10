@@ -95,12 +95,12 @@ public class Character : MonoBehaviour
             inputForwardDirection * inputMovement.y * this.characterSpeed * Time.deltaTime;
         this.characterMovement *= (1 - this.dampening);
 
-        Vector3 characterForward = this.characterMovement;
-        characterForward.y = 0.0f;
+        Vector3 targetDirection = (inputRightDirection * inputMovement.x) + (inputForwardDirection * inputMovement.y);
 
-        if (characterForward.sqrMagnitude > 0.0f)
+
+        if (targetDirection.sqrMagnitude > 0.001f)
         {
-            this.transform.forward = characterForward.normalized;
+            this.transform.forward = targetDirection.normalized;
         }
 
         this.controller.Move(this.characterMovement);
