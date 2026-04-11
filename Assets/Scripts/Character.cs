@@ -27,9 +27,14 @@ public class Character : MonoBehaviour
     [SerializeField]
     private Transform cameraTransform;
 
+    [SerializeField]
+    private LayerMask platformLayer;
+
     private Vector3 characterMovement;
     private Vector3 jumpVelocity;
     private Vector3 characterGravity;
+    private Vector3 platformVelocity;
+    private Vector2 currentInputMovement;
 
     void Start()
     {
@@ -68,11 +73,23 @@ public class Character : MonoBehaviour
         this.jumpCooldownTimer -= Time.deltaTime;
     }
 
-    void Update()
+    private void GetPlatformVelocity()
     {
-        this.HandleJumping();
+        this.platformVelocity = Vector3.zero;
+        if (Physics.Raycast(this.transform.position, Vector3.down, out RaycastHit hitInfo, 2.0f, this.platformLayer))
+        {
+            MovingPlatform platform = hitInfo.collider.GetComponent<MovingPlatform>();
+            if (platform != null)
+            {
+                this.platformVelocity = platform.GetVelocity();
+            }
+        }
+    }
 
-        var inputMovement = this.moveAction.ReadValue<Vector2>();
+    void FixedUpdate()
+    {
+        this.GetPlatformVelocity();
+
         var inputRightDirection = this.cameraTransform.right;
         var inputForwardDirection = this.cameraTransform.forward;
 
@@ -90,12 +107,12 @@ public class Character : MonoBehaviour
         this.characterMovement += this.characterGravity * Time.deltaTime;
         this.characterMovement += this.jumpVelocity * Time.deltaTime;
         this.characterMovement +=
-            inputRightDirection * inputMovement.x * this.characterSpeed * Time.deltaTime;
+            inputRightDirection * this.currentInputMovement.x * this.characterSpeed * Time.deltaTime;
         this.characterMovement +=
-            inputForwardDirection * inputMovement.y * this.characterSpeed * Time.deltaTime;
+            inputForwardDirection * this.currentInputMovement.y * this.characterSpeed * Time.deltaTime;
         this.characterMovement *= (1 - this.dampening);
 
-        Vector3 targetDirection = (inputRightDirection * inputMovement.x) + (inputForwardDirection * inputMovement.y);
+        Vector3 targetDirection = (inputRightDirection * this.currentInputMovement.x) + (inputForwardDirection * this.currentInputMovement.y);
 
 
         if (targetDirection.sqrMagnitude > 0.001f)
@@ -103,6 +120,19 @@ public class Character : MonoBehaviour
             this.transform.forward = targetDirection.normalized;
         }
 
-        this.controller.Move(this.characterMovement);
+        Vector3 appliedPlatformVelocity = Vector3.zero;
+        if (!this.isJumping)
+        {
+            appliedPlatformVelocity = this.platformVelocity;
+        }
+
+        var combinedMovement = this.characterMovement + appliedPlatformVelocity * Time.fixedDeltaTime;
+        this.controller.Move(combinedMovement);
+    }
+
+    void Update()
+    {
+        this.HandleJumping();
+        this.currentInputMovement = this.moveAction.ReadValue<Vector2>();
     }
 }
