@@ -5,6 +5,12 @@ using UnityEngine.InputSystem;
 public class Lever : MonoBehaviour
 {
     private bool on = false;
+
+    public bool IsOn
+    {
+        get { return this.on; }
+    }
+
     private bool interpolating = false;
     private float currentInterpolationTime = 0.0f;
     private InputAction interactAction;

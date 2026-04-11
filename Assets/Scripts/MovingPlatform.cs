@@ -11,7 +11,11 @@ public class MovingPlatform : MonoBehaviour
     [SerializeField]
     private Vector3 end;
 
+    [SerializeField]
+    private Lever activationLever;
+
     private Vector3 lastPosition;
+    private float currentPathTime;
 
     void Start()
     {
@@ -21,7 +25,13 @@ public class MovingPlatform : MonoBehaviour
     void FixedUpdate()
     {
         this.lastPosition = this.transform.position;
-        float pingPong = Mathf.PingPong(Time.fixedTime * this.platformSpeed, 1.0f);
+
+        if (this.activationLever == null || this.activationLever.IsOn)
+        {
+            this.currentPathTime += Time.fixedDeltaTime;
+        }
+
+        float pingPong = Mathf.PingPong(this.currentPathTime * this.platformSpeed, 1.0f);
         var newPosition = Vector3.Lerp(this.start, this.end, pingPong);
         this.transform.localPosition = newPosition;
     }
