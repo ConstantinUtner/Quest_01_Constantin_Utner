@@ -36,6 +36,7 @@ public class Character : MonoBehaviour
     private Vector3 characterGravity;
     private Vector3 platformVelocity;
     private Vector2 currentInputMovement;
+    private Animator animator;
 
     void Start()
     {
@@ -43,6 +44,14 @@ public class Character : MonoBehaviour
         this.moveAction = InputSystem.actions.FindAction("Move");
         this.jumpAction = InputSystem.actions.FindAction("Jump");
         this.jumpCooldownTimer = 0.0f;
+        this.animator = this.GetComponent<Animator>();
+    }
+
+    void SetAnimationState(Vector2 inputMovement)
+    {
+        this.animator.SetBool("IsJumping", this.isJumping);
+        this.animator.SetBool("IsRunning", inputMovement != Vector2.zero);
+        this.animator.SetFloat("MovementForward", inputMovement.magnitude);
     }
 
     void HandleJumping()
@@ -77,6 +86,7 @@ public class Character : MonoBehaviour
     private void GetPlatformVelocity()
     {
         this.platformVelocity = Vector3.zero;
+
         if (
             Physics.Raycast(
                 this.transform.position,
@@ -87,10 +97,18 @@ public class Character : MonoBehaviour
             )
         )
         {
-            MovingPlatform platform = hitInfo.collider.GetComponent<MovingPlatform>();
-            if (platform != null)
+            TweenedMovingPlatform tweenPlatform =
+                hitInfo.collider.GetComponent<TweenedMovingPlatform>();
+            if (tweenPlatform != null)
             {
-                this.platformVelocity = platform.GetVelocity();
+                this.platformVelocity = tweenPlatform.GetVelocity();
+                return;
+            }
+
+            MovingPlatform oldPlatform = hitInfo.collider.GetComponent<MovingPlatform>();
+            if (oldPlatform != null)
+            {
+                this.platformVelocity = oldPlatform.GetVelocity();
             }
         }
     }
@@ -145,6 +163,8 @@ public class Character : MonoBehaviour
         var combinedMovement =
             this.characterMovement + appliedPlatformVelocity * Time.fixedDeltaTime;
         this.controller.Move(combinedMovement);
+
+        this.SetAnimationState(this.currentInputMovement);
     }
 
     void Update()
