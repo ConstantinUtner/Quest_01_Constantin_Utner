@@ -63,6 +63,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8989e8b9b6d1ea940b3256d5a20ee6df, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3094964012872473483}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8989e8b9b6d1ea940b3256d5a20ee6df, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4255852159380152525}
   m_SourcePrefab: {fileID: 100100000, guid: 8989e8b9b6d1ea940b3256d5a20ee6df, type: 3}
 --- !u!1 &788893794562336148 stripped
 GameObject:
@@ -84,10 +87,25 @@ MeshCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -5968381573125200654, guid: 8989e8b9b6d1ea940b3256d5a20ee6df, type: 3}
+--- !u!114 &4255852159380152525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 788893794562336148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6a39bd454e304694857ec1d988e1bb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  rotationSpeed: 90
+  collectSound: {fileID: 8300000, guid: dbfc6178bf7854d9b8f9b1886f76ab59, type: 3}
+  sfxMixerGroup: {fileID: 8891198907224396074, guid: d7737d4a3996a4c2093412fa2fc8e3f6, type: 2}

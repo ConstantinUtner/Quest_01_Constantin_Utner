@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -76,7 +77,15 @@ public class Character : MonoBehaviour
     private void GetPlatformVelocity()
     {
         this.platformVelocity = Vector3.zero;
-        if (Physics.Raycast(this.transform.position, Vector3.down, out RaycastHit hitInfo, 2.0f, this.platformLayer))
+        if (
+            Physics.Raycast(
+                this.transform.position,
+                Vector3.down,
+                out RaycastHit hitInfo,
+                2.0f,
+                this.platformLayer
+            )
+        )
         {
             MovingPlatform platform = hitInfo.collider.GetComponent<MovingPlatform>();
             if (platform != null)
@@ -107,13 +116,20 @@ public class Character : MonoBehaviour
         this.characterMovement += this.characterGravity * Time.deltaTime;
         this.characterMovement += this.jumpVelocity * Time.deltaTime;
         this.characterMovement +=
-            inputRightDirection * this.currentInputMovement.x * this.characterSpeed * Time.deltaTime;
+            inputRightDirection
+            * this.currentInputMovement.x
+            * this.characterSpeed
+            * Time.deltaTime;
         this.characterMovement +=
-            inputForwardDirection * this.currentInputMovement.y * this.characterSpeed * Time.deltaTime;
+            inputForwardDirection
+            * this.currentInputMovement.y
+            * this.characterSpeed
+            * Time.deltaTime;
         this.characterMovement *= (1 - this.dampening);
 
-        Vector3 targetDirection = (inputRightDirection * this.currentInputMovement.x) + (inputForwardDirection * this.currentInputMovement.y);
-
+        Vector3 targetDirection =
+            (inputRightDirection * this.currentInputMovement.x)
+            + (inputForwardDirection * this.currentInputMovement.y);
 
         if (targetDirection.sqrMagnitude > 0.001f)
         {
@@ -126,7 +142,8 @@ public class Character : MonoBehaviour
             appliedPlatformVelocity = this.platformVelocity;
         }
 
-        var combinedMovement = this.characterMovement + appliedPlatformVelocity * Time.fixedDeltaTime;
+        var combinedMovement =
+            this.characterMovement + appliedPlatformVelocity * Time.fixedDeltaTime;
         this.controller.Move(combinedMovement);
     }
 
