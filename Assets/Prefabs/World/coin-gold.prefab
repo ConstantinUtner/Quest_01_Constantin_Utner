@@ -66,6 +66,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8989e8b9b6d1ea940b3256d5a20ee6df, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4255852159380152525}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8989e8b9b6d1ea940b3256d5a20ee6df, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 831081678636019008}
   m_SourcePrefab: {fileID: 100100000, guid: 8989e8b9b6d1ea940b3256d5a20ee6df, type: 3}
 --- !u!1 &788893794562336148 stripped
 GameObject:
@@ -109,3 +112,24 @@ MonoBehaviour:
   rotationSpeed: 90
   collectSound: {fileID: 8300000, guid: dbfc6178bf7854d9b8f9b1886f76ab59, type: 3}
   sfxMixerGroup: {fileID: 8891198907224396074, guid: d7737d4a3996a4c2093412fa2fc8e3f6, type: 2}
+--- !u!135 &831081678636019008
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 788893794562336148}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.24256548
+  m_Center: {x: -0.042565495, y: 0.19999999, z: 0}

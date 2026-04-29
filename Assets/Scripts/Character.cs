@@ -38,6 +38,27 @@ public class Character : MonoBehaviour
     private Vector2 currentInputMovement;
     private Animator animator;
 
+    [Header("Audio Settings")]
+    [SerializeField]
+    private AudioSource footstepAudioSource;
+
+    [SerializeField]
+    private AudioSource jumpLandAudioSource;
+
+    [SerializeField]
+    private AudioClip jumpSound;
+
+    [SerializeField]
+    private AudioClip landSound;
+
+    [Header("Particles")]
+    [SerializeField]
+    private ParticleSystem runDustParticles;
+
+    [Header("Respawn Settings")]
+    [SerializeField]
+    private Transform respawnPoint;
+
     void Start()
     {
         this.controller = this.GetComponent<CharacterController>();
@@ -50,8 +71,38 @@ public class Character : MonoBehaviour
     void SetAnimationState(Vector2 inputMovement)
     {
         this.animator.SetBool("IsJumping", this.isJumping);
-        this.animator.SetBool("IsRunning", inputMovement != Vector2.zero);
+
+        bool isMoving = inputMovement != Vector2.zero;
+        this.animator.SetBool("IsRunning", isMoving);
         this.animator.SetFloat("MovementForward", inputMovement.magnitude);
+
+        // --- FOOTSTEPS & DUST PARTICLES LOGIK ---
+        if (this.controller.isGrounded && isMoving)
+        {
+            // Sound an
+            if (this.footstepAudioSource != null && !this.footstepAudioSource.isPlaying)
+            {
+                this.footstepAudioSource.Play();
+            }
+            // Partikel an
+            if (this.runDustParticles != null && !this.runDustParticles.isPlaying)
+            {
+                this.runDustParticles.Play();
+            }
+        }
+        else
+        {
+            // Sound aus
+            if (this.footstepAudioSource != null && this.footstepAudioSource.isPlaying)
+            {
+                this.footstepAudioSource.Pause();
+            }
+            // Partikel aus
+            if (this.runDustParticles != null && this.runDustParticles.isPlaying)
+            {
+                this.runDustParticles.Stop();
+            }
+        }
     }
 
     void HandleJumping()
@@ -60,6 +111,12 @@ public class Character : MonoBehaviour
         {
             this.jumpVelocity = Vector3.zero;
             this.isJumping = false;
+
+            // --- LANDING AUDIO ---
+            if (this.landSound != null && this.jumpLandAudioSource != null)
+            {
+                this.jumpLandAudioSource.PlayOneShot(this.landSound);
+            }
         }
 
         if (!this.isJumping && this.jumpAction.WasPressedThisFrame())
@@ -69,6 +126,12 @@ public class Character : MonoBehaviour
             this.jumpVelocity.y = this.jumpSpeed;
             this.jumpCooldownTimer = this.jumpCooldown;
             this.isJumping = true;
+
+            // --- AUDIO LOGIK JUMP ---
+            if (this.jumpSound != null)
+            {
+                this.jumpLandAudioSource.PlayOneShot(this.jumpSound);
+            }
         }
 
         if (this.jumpVelocity.y > 0.0f)
@@ -171,5 +234,31 @@ public class Character : MonoBehaviour
     {
         this.HandleJumping();
         this.currentInputMovement = this.moveAction.ReadValue<Vector2>();
+    }
+
+    // --- RESPAWN LOGIK ---
+    public void Respawn()
+    {
+        if (this.respawnPoint != null)
+        {
+            this.controller.enabled = false;
+            this.transform.position = this.respawnPoint.position;
+            this.controller.enabled = true;
+        }
+        else
+        {
+            Debug.LogWarning(
+                "Respawn Point is not set on Character! Please assign a respawn point in the inspector."
+            );
+        }
+    }
+
+    public void EnemyBounce()
+    {
+        this.characterGravity = Vector3.zero;
+        this.jumpVelocity = Vector3.zero;
+        this.jumpVelocity.y = this.jumpSpeed * 0.8f; // Lässt den Spieler leicht nach oben abprallen
+        this.jumpCooldownTimer = this.jumpCooldown;
+        this.isJumping = true;
     }
 }
