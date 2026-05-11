@@ -59,8 +59,24 @@ public class Character : MonoBehaviour
     [SerializeField]
     private Transform respawnPoint;
 
+    [Header("HUD Settings")]
+    [SerializeField]
+    private float maxHealth = 100.0f;
+    private float currentHealth;
+
+    public float GetCurrentHealth() => this.currentHealth;
+
+    public float GetMaxHealth() => this.maxHealth;
+
+    public void InflictDamage(float amount)
+    {
+        this.currentHealth -= amount;
+        this.currentHealth = Mathf.Clamp(this.currentHealth, 0.0f, this.maxHealth);
+    }
+
     void Start()
     {
+        this.currentHealth = this.maxHealth;
         this.controller = this.GetComponent<CharacterController>();
         this.moveAction = InputSystem.actions.FindAction("Move");
         this.jumpAction = InputSystem.actions.FindAction("Jump");

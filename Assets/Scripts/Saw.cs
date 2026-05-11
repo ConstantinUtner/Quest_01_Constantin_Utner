@@ -27,6 +27,19 @@ public class Saw : MonoBehaviour
     [SerializeField]
     private ParticleSystem cuttingParticles;
 
+    [Header("Damage Settings")]
+    [SerializeField]
+    private float damagePerSecond = 30f;
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            var character = other.GetComponentInChildren<Character>();
+            character.InflictDamage(this.damagePerSecond * Time.fixedDeltaTime);
+        }
+    }
+
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
