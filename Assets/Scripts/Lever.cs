@@ -50,7 +50,7 @@ public class Lever : MonoBehaviour
             {
                 this.ToggleLever();
             }
-            
+
             this.wasInteractPressed = false;
         }
     }

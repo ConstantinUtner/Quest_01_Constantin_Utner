@@ -250,6 +250,9 @@ public class Character : MonoBehaviour
     {
         this.HandleJumping();
         this.currentInputMovement = this.moveAction.ReadValue<Vector2>();
+        Debug.Log(
+            $"Move={this.currentInputMovement} enabled={this.moveAction.enabled} map={this.moveAction.actionMap?.enabled}"
+        );
     }
 
     // --- RESPAWN LOGIK ---
