@@ -17,10 +17,16 @@ public class Coin : MonoBehaviour
         transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
     }
 
+    private bool isCollected = false;
+
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player"))
+        if (isCollected || !other.CompareTag("Player"))
             return;
+
+        // Mark the coin as collected to prevent multiple triggers
+        isCollected = true;
+        UIManager.Instance.CollectCoin();
 
         if (collectSound != null)
         {
