@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Localization;
+using UnityEngine.UIElements;
 
 public class Sign : MonoBehaviour
 {
@@ -7,6 +9,9 @@ public class Sign : MonoBehaviour
     private GameObject dialogBox;
     private bool canInteract;
     private InputAction interactAction;
+
+    [SerializeField]
+    private LocalizedString dialogText;
 
     private void Start()
     {
@@ -21,8 +26,18 @@ public class Sign : MonoBehaviour
     {
         if (this.canInteract)
         {
-            bool isOpening = !this.dialogBox.activeInHierarchy;
-            this.dialogBox.SetActive(isOpening);
+            if (this.dialogBox.activeInHierarchy)
+            {
+                this.dialogBox.SetActive(false);
+            }
+            else
+            {
+                this.dialogBox.SetActive(true);
+
+                var uiDocument = this.dialogBox.GetComponent<UIDocument>();
+                var label = uiDocument.rootVisualElement.Q<Label>();
+                label.text = this.dialogText.GetLocalizedString();
+            }
         }
     }
 
