@@ -23,6 +23,9 @@ public class Saw : MonoBehaviour
     private AudioMixerGroup sfxMixerGroup;
     private bool _isCutting;
 
+    // Speichert den genauen Zeitpunkt, an dem der Spieler die Säge zuletzt berührt hat
+    private float _lastTriggerTime;
+
     [Header("Particles")]
     [SerializeField]
     private ParticleSystem cuttingParticles;
@@ -35,8 +38,14 @@ public class Saw : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            // Aktualisiert die Zeitmessung kontinuierlich, solange der Spieler in der Säge steht
+            _lastTriggerTime = Time.time;
+
             var character = other.GetComponentInChildren<Character>();
-            character.InflictDamage(this.damagePerSecond * Time.fixedDeltaTime);
+            if (character != null)
+            {
+                character.InflictDamage(this.damagePerSecond * Time.fixedDeltaTime);
+            }
         }
     }
 
@@ -62,16 +71,32 @@ public class Saw : MonoBehaviour
     private void Update()
     {
         transform.Rotate(spinAxis, spinSpeed * Time.deltaTime);
+
+        // === BUGFIX: Status zurücksetzen nach einem Respawn ====
+        // Problem: Wenn der Spieler in der Säge stirbt und vom Respawn-Skript wegteleportiert wird,
+        // registriert Unity kein "OnTriggerExit". Die Säge würde endlos weiter sägen (Sound & Partikel).
+        // Lösung: Wenn die Säge aktiv ist (_isCutting) ABER der letzte Kontakt (_lastTriggerTime)
+        // länger als 0.1 Sekunden her ist, wissen wir: Der Spieler ist weg. Wir schalten die Säge ab.
+        if (_isCutting && Time.time - _lastTriggerTime > 0.1f)
+        {
+            SetState(false);
+        }
+        // ========================================================================================
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
+        {
+            // Startet die Zeitmessung im Moment der ersten Berührung
+            _lastTriggerTime = Time.time;
             SetState(true);
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
+        // Wird aufgerufen, wenn der Spieler normal aus der Säge herausläuft (nicht bei Teleport/Respawn)
         if (other.CompareTag("Player"))
             SetState(false);
     }

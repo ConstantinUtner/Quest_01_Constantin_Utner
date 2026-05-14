@@ -194,6 +194,13 @@ public class Character : MonoBehaviour
 
     void FixedUpdate()
     {
+        // Stoppt die Physik-Bewegung und setzt die Animation auf "Stehen", wenn tot
+        if (this.currentHealth <= 0)
+        {
+            this.SetAnimationState(Vector2.zero);
+            return;
+        }
+
         this.GetPlatformVelocity();
 
         var inputRightDirection = this.cameraTransform.right;
@@ -248,6 +255,13 @@ public class Character : MonoBehaviour
 
     void Update()
     {
+        // Ignoriert jeglichen Controller-/Tastatur-Input, wenn der Spieler tot ist
+        if (this.currentHealth <= 0)
+        {
+            this.currentInputMovement = Vector2.zero;
+            return;
+        }
+
         this.HandleJumping();
         this.currentInputMovement = this.moveAction.ReadValue<Vector2>();
         Debug.Log(
@@ -279,5 +293,11 @@ public class Character : MonoBehaviour
         this.jumpVelocity.y = this.jumpSpeed * 0.8f; // Lässt den Spieler leicht nach oben abprallen
         this.jumpCooldownTimer = this.jumpCooldown;
         this.isJumping = true;
+    }
+
+    // Reset Health für den Respawn
+    public void ResetHealth()
+    {
+        this.currentHealth = this.maxHealth;
     }
 }

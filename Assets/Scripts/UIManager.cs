@@ -21,9 +21,81 @@ public class UIManager : MonoBehaviour
     private CanvasGroup gameOverCanvasGroup;
 
     [SerializeField]
-    private float fadingTime = 2.0f;
+    private float fadingTime = 0.25f; // Schnelleres Fading
 
     private bool isFadingInGameOver = false;
+
+    private static UIManager instance = null;
+    public static UIManager Instance => instance;
+
+    private PlayerStatistics statistics;
+
+    private class PlayerStatistics
+    {
+        public int coinCounter = 0;
+    }
+
+    private void Awake()
+    {
+        instance = this;
+        this.statistics = new PlayerStatistics() { coinCounter = 0 };
+    }
+
+    private void OnDestroy()
+    {
+        if (instance == this)
+            instance = null;
+    }
+
+    private void Update()
+    {
+        // Aktualisiert die Healthbar basierend auf dem aktuellen Leben
+        float percent = this.character.GetCurrentHealth() / this.character.GetMaxHealth();
+        this.healthBar.fillAmount = percent;
+
+        // Wenn das Leben 0 erreicht, starte das Einblenden des Game Over Screens
+        if (percent <= 0.0f && !this.isFadingInGameOver)
+        {
+            this.StartCoroutine(this.FadeInGameOver());
+        }
+    }
+
+    public void CollectCoin()
+    {
+        this.statistics.coinCounter++;
+        this.coinCounterText.text = $"{this.statistics.coinCounter}";
+    }
+
+    // --- GAME OVER BUTTON FUNKTIONEN ---
+
+    public void OnRespawnClicked()
+    {
+        // 1. Münzen auf 0 setzen
+        this.statistics.coinCounter = 0;
+        this.coinCounterText.text = "0";
+
+        // 2. Leben auf 100% setzen
+        this.character.ResetHealth();
+
+        // 3. Spieler an den Startpunkt teleportieren
+        this.character.Respawn();
+
+        // 4. Game Over Screen aus- und HUD einblenden
+        this.StartCoroutine(this.FadeOutGameOver());
+    }
+
+    public void OnExitClicked()
+    {
+        // Beendet das fertige Spiel
+        Application.Quit();
+
+#if UNITY_EDITOR
+        // Stoppt den Play-Mode, falls wir im Unity Editor sind
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+    }
+
+    // --- FADING LOGIK ---
 
     private IEnumerator FadeInGameOver()
     {
@@ -42,45 +114,33 @@ public class UIManager : MonoBehaviour
 
         this.hudCanvasGroup.alpha = 0.0f;
         this.gameOverCanvasGroup.alpha = 1.0f;
+
+        // Aktiviert die Interaktion mit dem Game Over Screen.
+        // Nur wenn blocksRaycasts auf 'true' steht, können die Buttons (Respawn/Exit) angeklickt werden.
+        this.gameOverCanvasGroup.blocksRaycasts = true;
     }
 
-    private static UIManager instance = null;
-    public static UIManager Instance => instance;
-
-    private class PlayerStatistics
+    private IEnumerator FadeOutGameOver()
     {
-        public int coinCounter = 0;
-    }
+        float timer = 0.0f;
 
-    private PlayerStatistics statistics;
-
-    private void Update()
-    {
-        float percent = this.character.GetCurrentHealth() / this.character.GetMaxHealth();
-        this.healthBar.fillAmount = percent;
-
-        if (percent <= 0.0f && !this.isFadingInGameOver)
+        while (timer < this.fadingTime)
         {
-            this.StartCoroutine(this.FadeInGameOver());
+            float percent = timer / this.fadingTime;
+            this.hudCanvasGroup.alpha = percent;
+            this.gameOverCanvasGroup.alpha = 1.0f - percent;
+
+            yield return null;
+            timer += Time.deltaTime;
         }
-    }
 
-    private void Awake()
-    {
-        instance = this;
-        this.statistics = new PlayerStatistics() { coinCounter = 0 };
-    }
+        this.hudCanvasGroup.alpha = 1.0f;
+        this.gameOverCanvasGroup.alpha = 0.0f;
 
-    private void OnDestroy()
-    {
-        if (instance == this)
-            instance = null;
-    }
+        //  Deaktiviert die Interaktion mit dem unsichtbaren Game Over Screen.
+        // 'false' sorgt dafür, dass der Screen keine Klicks schluckt, die eigentlich für das Spiel gedacht sind.
+        this.gameOverCanvasGroup.blocksRaycasts = false;
 
-    public void CollectCoin()
-    {
-        this.statistics.coinCounter++;
-        string coinText = $"{this.statistics.coinCounter}";
-        this.coinCounterText.text = coinText;
+        this.isFadingInGameOver = false;
     }
 }

@@ -7,11 +7,12 @@ public class RespawnTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        CharacterController playerController = other.gameObject.GetComponent<CharacterController>();
+        Character character = other.gameObject.GetComponent<Character>();
 
-        if (playerController != null)
+        if (character != null)
         {
-            Respawn(playerController);
+            // Zieht dem Spieler maximales Leben ab, was ihn sofort tötet (statt Respawn)
+            character.InflictDamage(character.GetMaxHealth());
         }
     }
 
