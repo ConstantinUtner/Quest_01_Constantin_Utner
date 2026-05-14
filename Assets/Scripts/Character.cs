@@ -63,10 +63,16 @@ public class Character : MonoBehaviour
     [SerializeField]
     private float maxHealth = 100.0f;
     private float currentHealth;
+    private bool isVictory = false;
 
     public float GetCurrentHealth() => this.currentHealth;
 
     public float GetMaxHealth() => this.maxHealth;
+
+    public void SetVictory(bool victory)
+    {
+        this.isVictory = victory;
+    }
 
     public void InflictDamage(float amount)
     {
@@ -194,8 +200,8 @@ public class Character : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Stoppt die Physik-Bewegung und setzt die Animation auf "Stehen", wenn tot
-        if (this.currentHealth <= 0)
+        // Stoppt die Physik-Bewegung und setzt die Animation auf "Stehen", wenn tot oder bei Sieg
+        if (this.currentHealth <= 0 || this.isVictory)
         {
             this.SetAnimationState(Vector2.zero);
             return;
@@ -255,8 +261,8 @@ public class Character : MonoBehaviour
 
     void Update()
     {
-        // Ignoriert jeglichen Controller-/Tastatur-Input, wenn der Spieler tot ist
-        if (this.currentHealth <= 0)
+        // Ignoriert jeglichen Controller-/Tastatur-Input, wenn der Spieler tot ist oder bei Sieg
+        if (this.currentHealth <= 0 || this.isVictory)
         {
             this.currentInputMovement = Vector2.zero;
             return;

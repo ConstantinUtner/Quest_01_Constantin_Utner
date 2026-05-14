@@ -18,12 +18,16 @@ public class UIManager : MonoBehaviour
     private CanvasGroup hudCanvasGroup;
 
     [SerializeField]
-    private CanvasGroup gameOverCanvasGroup;
+    private CanvasGroup gameOverCanvasGroup; // Panel für Game Over
 
     [SerializeField]
-    private float fadingTime = 0.25f; // Schnelleres Fading
+    private CanvasGroup victoryCanvasGroup; // Panel für den Sieg
+
+    [SerializeField]
+    private float fadingTime = 0.25f; // Zeit für das Ein-/Ausblenden
 
     private bool isFadingInGameOver = false;
+    private bool isFadingInVictory = false;
 
     private static UIManager instance = null;
     public static UIManager Instance => instance;
@@ -77,12 +81,23 @@ public class UIManager : MonoBehaviour
         // 2. Leben auf 100% setzen
         this.character.ResetHealth();
 
-        // 3. Spieler an den Startpunkt teleportieren
+        // 3. Sieg-Status zurücksetzen
+        this.character.SetVictory(false);
+
+        // 4. Spieler an den Startpunkt teleportieren
         this.character.Respawn();
 
-        // 4. Game Over Screen aus- und HUD einblenden
+        // 5. Alle Juwelen zurücksetzen
+        Jewel[] jewels = Object.FindObjectsByType<Jewel>(FindObjectsSortMode.None);
+        foreach (var j in jewels)
+{
+            j.ResetJewel();
+        }
+
+        // 6. Bildschirme ausfaden
         this.StartCoroutine(this.FadeOutGameOver());
-    }
+        this.StartCoroutine(this.FadeOutVictory());
+}
 
     public void OnExitClicked()
     {
@@ -97,8 +112,56 @@ public class UIManager : MonoBehaviour
 
     // --- FADING LOGIK ---
 
-    private IEnumerator FadeInGameOver()
+    // Blendet den Sieg-Bildschirm ein und deaktiviert die Spielersteuerung
+    public void ShowVictory()
     {
+        if (!this.isFadingInVictory)
+        {
+            this.character.SetVictory(true);
+            this.StartCoroutine(this.FadeInVictory());
+        }
+    }
+
+    private IEnumerator FadeInVictory()
+    {
+        this.isFadingInVictory = true;
+        float timer = 0.0f;
+
+        while (timer < this.fadingTime)
+        {
+            float percent = timer / this.fadingTime;
+            this.hudCanvasGroup.alpha = 1.0f - percent;
+            this.victoryCanvasGroup.alpha = percent;
+
+            yield return null;
+            timer += Time.deltaTime;
+        }
+
+        this.hudCanvasGroup.alpha = 0.0f;
+        this.victoryCanvasGroup.alpha = 1.0f;
+        this.victoryCanvasGroup.blocksRaycasts = true;
+    }
+
+    private IEnumerator FadeOutVictory()
+    {
+        float timer = 0.0f;
+
+        while (timer < this.fadingTime)
+        {
+            float percent = timer / this.fadingTime;
+            this.victoryCanvasGroup.alpha = 1.0f - percent;
+
+            yield return null;
+            timer += Time.deltaTime;
+        }
+
+        this.victoryCanvasGroup.alpha = 0.0f;
+        this.victoryCanvasGroup.blocksRaycasts = false;
+        this.isFadingInVictory = false;
+    }
+
+    private IEnumerator FadeInGameOver()
+{
         this.isFadingInGameOver = true;
         float timer = 0.0f;
 
