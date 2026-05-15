@@ -309,6 +309,7 @@ public class Character : MonoBehaviour
 
     // === Q3: Blinken-Logik ===
     private Renderer[] characterRenderers;
+    private bool isBlinking = false;
 
     public void TriggerBlink()
     {
@@ -318,13 +319,17 @@ public class Character : MonoBehaviour
             this.characterRenderers = this.GetComponentsInChildren<Renderer>();
         }
 
-        // Alte Coroutine stoppen, um überlappendes Blinken zu verhindern
+        // Wenn bereits geblinkt wird, ignorieren wir den Aufruf (verhindert Flackern bei Saw-Schaden), da Saw jeden Frame updated
+        if (this.isBlinking)
+            return;
+
         StopCoroutine(nameof(BlinkRoutine));
         StartCoroutine(nameof(BlinkRoutine));
     }
 
     private System.Collections.IEnumerator BlinkRoutine()
     {
+        this.isBlinking = true;
         float duration = 0.5f;
         float blinkInterval = 0.1f;
         float elapsed = 0f;
@@ -339,6 +344,7 @@ public class Character : MonoBehaviour
 
         // Sicherstellen, dass der Charakter am Ende wieder sichtbar ist
         SetRenderersEnabled(true);
+        this.isBlinking = false;
     }
 
     private void SetRenderersEnabled(bool state)

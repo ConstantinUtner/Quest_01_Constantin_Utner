@@ -45,6 +45,9 @@ public class Saw : MonoBehaviour
             if (character != null)
             {
                 character.InflictDamage(this.damagePerSecond * Time.fixedDeltaTime);
+
+                // === Q3: Kontinuierliches Blinken bei Schaden ===
+                character.TriggerBlink();
             }
         }
     }
