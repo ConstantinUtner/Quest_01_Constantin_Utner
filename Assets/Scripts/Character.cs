@@ -86,6 +86,13 @@ public class Character : MonoBehaviour
         this.controller = this.GetComponent<CharacterController>();
         this.moveAction = InputSystem.actions.FindAction("Move");
         this.jumpAction = InputSystem.actions.FindAction("Jump");
+
+        // Sicherstellen, dass die Action Maps aktiviert sind, damit Input erkannt wird (Bugfix Input wurde nach Sign Activation ignoriert)
+        if (this.moveAction != null && this.moveAction.actionMap != null)
+        {
+            this.moveAction.actionMap.Enable();
+        }
+
         this.jumpCooldownTimer = 0.0f;
         this.animator = this.GetComponent<Animator>();
     }

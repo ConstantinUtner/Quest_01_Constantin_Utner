@@ -63,6 +63,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b12de1fdfc20c7c4a87d5e34c50093cb, type: 3}
       insertIndex: -1
       addedObject: {fileID: -3236981861024810422}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b12de1fdfc20c7c4a87d5e34c50093cb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -717532395268459338}
   m_SourcePrefab: {fileID: 100100000, guid: b12de1fdfc20c7c4a87d5e34c50093cb, type: 3}
 --- !u!1 &8738831294020834553 stripped
 GameObject:
@@ -91,3 +94,28 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 8076890130576784169, guid: b12de1fdfc20c7c4a87d5e34c50093cb, type: 3}
+--- !u!114 &-717532395268459338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8738831294020834553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a420dc15d196741d6bf229b1d4c84252, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: JumpAndRun::Sign
+  dialogBox: {fileID: 0}
+  dialogText:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []

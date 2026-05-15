@@ -18,8 +18,31 @@ MonoBehaviour:
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 159093088256
-    m_Localized: Hello
+  - m_Id: 1106110508425216
+    m_Localized: Jump over the slimes to avoid damage or jump on them to defeat them!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106110529396736
+    m_Localized: Why don't slimes ever get lost? Because they always stick to the
+      path!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106110529396737
+    m_Localized: Watch out for the saws! They are very sharp.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1109171435986944
+    m_Localized: Welcome! Flip the nearby switch to activate the moving platforms
+      and begin your journey.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1109171440181249
+    m_Localized: Why did the mage get kicked out of the library? He kept casting
+      'Silence' on everyone!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1109171440181250
+    m_Localized: What do developers do in case of fire? They check their firewall.
     m_Metadata:
       m_Items: []
   references:

@@ -18,8 +18,31 @@ MonoBehaviour:
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 159093088256
-    m_Localized: Hallo
+  - m_Id: 1106110508425216
+    m_Localized: "Spring \xFCber die Slimes, um kein Leben zu verlieren, oder besiege
+      sie, indem du auf sie springst!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106110529396736
+    m_Localized: Warum verlaufen sich Slimes nie? Weil sie immer am Weg kleben bleiben!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106110529396737
+    m_Localized: "Pass auf die S\xE4gen auf! Sie sind sehr scharf."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1109171435986944
+    m_Localized: "Willkommen! Lege den Schalter in der N\xE4he um, um die beweglichen
+      Plattformen zu aktivieren und deine Reise zu beginnen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1109171440181249
+    m_Localized: "Warum wurde der Magier aus der Bibliothek geworfen? Er hat st\xE4ndig
+      'Stille' auf alle gezaubert!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1109171440181250
+    m_Localized: Was macht ein Programmierer, wenn es brennt? Firewall aktivieren.
     m_Metadata:
       m_Items: []
   references:

@@ -15,8 +15,28 @@ MonoBehaviour:
   m_TableCollectionName: Dialog
   m_TableCollectionNameGuidString: 237b9d2d34b0a44c9b410cb3cb44ea8f
   m_Entries:
-  - m_Id: 159093088256
-    m_Key: SignDialog
+  - m_Id: 1106110508425216
+    m_Key: Sign_Hint_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106110529396736
+    m_Key: Sign_Joke_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1106110529396737
+    m_Key: Sign_Hint_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1109171435986944
+    m_Key: Sign_Start_Hint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1109171440181249
+    m_Key: Sign_Joke_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1109171440181250
+    m_Key: Sign_Joke_3
     m_Metadata:
       m_Items: []
   m_Metadata:

@@ -16,7 +16,13 @@ public class Sign : MonoBehaviour
     private void Start()
     {
         this.interactAction = InputSystem.actions.FindAction("Attack");
-        this.interactAction.performed += ToggleDialogBox;
+
+        // Steuerung aktivieren, da Tastendrücke sonst ignoriert werden (Bugfix Input wurde nach Sign Activation ignoriert)
+        if (this.interactAction != null && this.interactAction.actionMap != null)
+        {
+            this.interactAction.actionMap.Enable();
+            this.interactAction.performed += ToggleDialogBox;
+        }
 
         this.dialogBox.SetActive(false);
         this.canInteract = false;

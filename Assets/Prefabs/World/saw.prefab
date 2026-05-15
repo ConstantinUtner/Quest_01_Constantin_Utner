@@ -122,7 +122,7 @@ MonoBehaviour:
   cuttingSound: {fileID: 8300000, guid: 4675401b2a5584969b8e28717eec2842, type: 3}
   sfxMixerGroup: {fileID: 8891198907224396074, guid: d7737d4a3996a4c2093412fa2fc8e3f6, type: 2}
   cuttingParticles: {fileID: 879007666732429363, guid: e98e02a20235f48c2b5ef723adb97725, type: 3}
-  damagePerSecond: 30
+  damagePerSecond: 150
 --- !u!82 &6675141103639916513
 AudioSource:
   m_ObjectHideFlags: 0

@@ -18,13 +18,13 @@ public class UIManager : MonoBehaviour
     private CanvasGroup hudCanvasGroup;
 
     [SerializeField]
-    private CanvasGroup gameOverCanvasGroup; // Panel für Game Over
+    private CanvasGroup gameOverCanvasGroup;
 
     [SerializeField]
-    private CanvasGroup victoryCanvasGroup; // Panel für den Sieg
+    private CanvasGroup victoryCanvasGroup;
 
     [SerializeField]
-    private float fadingTime = 0.25f; // Zeit für das Ein-/Ausblenden
+    private float fadingTime = 0.25f;
 
     private bool isFadingInGameOver = false;
     private bool isFadingInVictory = false;
@@ -74,6 +74,13 @@ public class UIManager : MonoBehaviour
 
     public void OnRespawnClicked()
     {
+        // BUGFIX: EventSystem-Auswahl leeren, damit die Taste während des Ausblendens
+        // nicht versehentlich erneut (z. B. durch Enter) ausgelöst wird.
+        if (UnityEngine.EventSystems.EventSystem.current != null)
+        {
+            UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
+        }
+
         // 1. Münzen auf 0 setzen
         this.statistics.coinCounter = 0;
         this.coinCounterText.text = "0";
@@ -90,17 +97,31 @@ public class UIManager : MonoBehaviour
         // 5. Alle Juwelen zurücksetzen
         Jewel[] jewels = Object.FindObjectsByType<Jewel>(FindObjectsSortMode.None);
         foreach (var j in jewels)
-{
+        {
             j.ResetJewel();
         }
 
-        // 6. Bildschirme ausfaden
-        this.StartCoroutine(this.FadeOutGameOver());
-        this.StartCoroutine(this.FadeOutVictory());
-}
+        // 6. Bildschirme ausfaden (nur wenn sie auch wirklich sichtbar sind)
+        // & Flackern verhindern, indem vor dem Ausblenden geprüft wird, ob die Screens aktiv sind.
+        if (this.gameOverCanvasGroup.alpha > 0)
+        {
+            this.StartCoroutine(this.FadeOutGameOver());
+        }
+
+        if (this.victoryCanvasGroup.alpha > 0)
+        {
+            this.StartCoroutine(this.FadeOutVictory());
+        }
+    }
 
     public void OnExitClicked()
     {
+        // BUGFIX: Versehentliches Beenden durch Leeren der Auswahl verhindern.
+        if (UnityEngine.EventSystems.EventSystem.current != null)
+        {
+            UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
+        }
+
         // Beendet das fertige Spiel
         Application.Quit();
 
@@ -149,19 +170,21 @@ public class UIManager : MonoBehaviour
         while (timer < this.fadingTime)
         {
             float percent = timer / this.fadingTime;
+            this.hudCanvasGroup.alpha = percent;
             this.victoryCanvasGroup.alpha = 1.0f - percent;
 
             yield return null;
             timer += Time.deltaTime;
         }
 
+        this.hudCanvasGroup.alpha = 1.0f;
         this.victoryCanvasGroup.alpha = 0.0f;
         this.victoryCanvasGroup.blocksRaycasts = false;
         this.isFadingInVictory = false;
     }
 
     private IEnumerator FadeInGameOver()
-{
+    {
         this.isFadingInGameOver = true;
         float timer = 0.0f;
 
@@ -200,7 +223,7 @@ public class UIManager : MonoBehaviour
         this.hudCanvasGroup.alpha = 1.0f;
         this.gameOverCanvasGroup.alpha = 0.0f;
 
-        //  Deaktiviert die Interaktion mit dem unsichtbaren Game Over Screen.
+        // Deaktiviert die Interaktion mit dem unsichtbaren Game Over Screen.
         // 'false' sorgt dafür, dass der Screen keine Klicks schluckt, die eigentlich für das Spiel gedacht sind.
         this.gameOverCanvasGroup.blocksRaycasts = false;
 
