@@ -26,6 +26,10 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private AudioClip squashSound;
 
+    [Header("Damage Settings")]
+    [SerializeField]
+    private float damageAmount = 40f;
+
     private Vector3 startPosition;
     private bool movingPositive = true;
     private bool isDead = false;
@@ -103,7 +107,9 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                player.Respawn();
+                // === Schaden und Blinken bei Enemy-Kontakt ===
+                player.InflictDamage(this.damageAmount);
+                player.TriggerBlink();
             }
         }
     }

@@ -306,4 +306,61 @@ public class Character : MonoBehaviour
     {
         this.currentHealth = this.maxHealth;
     }
+
+    // === Q3: Blinken-Logik ===
+    private Renderer[] characterRenderers;
+
+    public void TriggerBlink()
+    {
+        // Renderer beim ersten Aufruf cachen (Performance)
+        if (this.characterRenderers == null)
+        {
+            this.characterRenderers = this.GetComponentsInChildren<Renderer>();
+        }
+
+        // Alte Coroutine stoppen, um überlappendes Blinken zu verhindern
+        StopCoroutine(nameof(BlinkRoutine));
+        StartCoroutine(nameof(BlinkRoutine));
+    }
+
+    private System.Collections.IEnumerator BlinkRoutine()
+    {
+        float duration = 0.5f;
+        float blinkInterval = 0.1f;
+        float elapsed = 0f;
+
+        // Schaltet die Sichtbarkeit im Intervall um, bis die Zeit abgelaufen ist
+        while (elapsed < duration)
+        {
+            SetRenderersEnabled(!AreRenderersEnabled());
+            yield return new WaitForSeconds(blinkInterval);
+            elapsed += blinkInterval;
+        }
+
+        // Sicherstellen, dass der Charakter am Ende wieder sichtbar ist
+        SetRenderersEnabled(true);
+    }
+
+    private void SetRenderersEnabled(bool state)
+    {
+        // Alle Renderer umschalten (Partikel-Effekte werden ignoriert)
+        foreach (var r in this.characterRenderers)
+        {
+            if (r is ParticleSystemRenderer)
+                continue;
+            r.enabled = state;
+        }
+    }
+
+    private bool AreRenderersEnabled()
+    {
+        // Status des ersten aktiven Renderers als Referenzwert abfragen
+        foreach (var r in this.characterRenderers)
+        {
+            if (r is ParticleSystemRenderer)
+                continue;
+            return r.enabled;
+        }
+        return true;
+    }
 }
