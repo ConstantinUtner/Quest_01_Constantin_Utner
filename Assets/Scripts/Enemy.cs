@@ -19,6 +19,10 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private float patrolDistance = 3.0f;
 
+    // === Option zum Umkehren der Startrichtung ===
+    [SerializeField]
+    private bool startReversed = false;
+
     [Header("Audio Settings")]
     [SerializeField]
     private AudioSource audioSource;
@@ -38,6 +42,10 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         this.startPosition = this.transform.position;
+
+        // === Startrichtung basierend auf der Einstellung festlegen ===
+        this.movingPositive = !this.startReversed;
+
         this.animator = this.GetComponentInChildren<Animator>();
     }
 
