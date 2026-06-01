@@ -43,6 +43,16 @@ public class UIManager : MonoBehaviour
     {
         instance = this;
         this.statistics = new PlayerStatistics() { coinCounter = 0 };
+
+        // --- FIX: Disable Victory and Game Over screens on start ---
+        this.victoryCanvasGroup.alpha = 0.0f;
+        this.victoryCanvasGroup.blocksRaycasts = false;
+
+        this.gameOverCanvasGroup.alpha = 0.0f;
+        this.gameOverCanvasGroup.blocksRaycasts = false;
+
+        // Ensure HUD is fully visible
+        this.hudCanvasGroup.alpha = 1.0f;
     }
 
     private void OnDestroy()
